@@ -40,9 +40,10 @@ class Search extends Component {
     return (
       <div className={style.container}>
         <input
+          className={style.input}
           onInput={this.handleInput}
         />
-        <div>
+        <div className={style.results}>
           {
             loading
               ? <div>Loading</div>
