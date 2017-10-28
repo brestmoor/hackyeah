@@ -34,11 +34,12 @@
     "webpack": "^3.8.1"
   },
   "dependencies": {
+    "axios": "^0.17.0",
     "css-loader": "^0.28.7",
     "eslint": "^4.10.0",
     "express": "^4.16.2",
-    "lodash": "^4.17.4",
     "leaflet": "^1.2.0",
+    "lodash": "^4.17.4",
     "prop-types": "^15.6.0",
     "react": "^16.0.0",
     "react-dom": "^16.0.0",

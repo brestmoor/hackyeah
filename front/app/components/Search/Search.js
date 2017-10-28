@@ -21,7 +21,7 @@ class Search extends Component {
   }
 
   search (text, timestamp) {
-    API.search()
+    API.search(text)
       .then((data) => {
         if (timestamp === this.timestamp) {
           this.setState({
@@ -62,8 +62,8 @@ class Search extends Component {
               <div className={style.results}>
                 <Loader condition={loading}>
                   <ul>
-                    {data.map(text => (
-                      <li key={text}>{text}</li>
+                    {data.map(v => (
+                      <li key={v.id}>{v.name}</li>
                     ))}
                   </ul>
                 </Loader>

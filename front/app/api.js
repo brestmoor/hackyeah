@@ -1,6 +1,11 @@
+import axios from 'axios'
+
 const api = {
-  search: () => Promise.resolve(['Cracow', 'Warsaw', 'New York', 'Cracow2', 'Warsaw2', 'New York2', 'Cracow3',
-    'Warsaw3', 'New York3', 'Warsaw4', 'New York4', 'Warsaw5', 'New York5', 'Warsaw6', 'New York6'])
+  search: text =>
+    axios.get(`http://pl-l-pc0cmhkz:9091/rest/cities?name=${text}`)
+      .then(({ data }) => data)
+      .catch(() => [])
+
 }
 
 export default api

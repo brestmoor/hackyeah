@@ -41,7 +41,7 @@ class Map extends Component {
 
   render () {
     return (
-      <div id="mapid" style={{ height: '75vh' }} />
+      <div id="mapid" style={{ height: '100vh' }} />
     )
   }
 }
