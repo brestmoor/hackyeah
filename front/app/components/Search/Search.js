@@ -18,6 +18,7 @@ class Search extends Component {
 
     this.handleInput = this.handleInput.bind(this)
     this.search = debounce(this.search.bind(this), 500)
+    this.mapMoveEnd = debounce(this.mapMoveEnd.bind(this), 500)
   }
 
   componentDidMount () {
@@ -28,11 +29,26 @@ class Search extends Component {
         loading: false
       })
     })
+
+    this.map.on('moveend', () => {
+      this.mapMoveEnd()
+    })
+  }
+
+  mapMoveEnd () {
+    const { lat: w, lng: s } = this.map.getBounds()._southWest // eslint-disable-line
+    const { lat: e, lng: n } = this.map.getBounds()._northEast // eslint-disable-line
+
+    API.mapBounds(w, s, e, n)
+      .then((data) => {
+        console.log(data)
+      })
   }
 
   search (text, timestamp) {
     API.search(text)
       .then((data) => {
+        console.log(data)
         if (timestamp === this.timestamp) {
           this.setState({
             loading: false,
@@ -62,7 +78,6 @@ class Search extends Component {
     API.getLatLon(id)
       .then((data) => {
         if (data) {
-          console.log(data)
           Map.setLocation(data.lng, data.lat)
         }
       })
@@ -90,7 +105,7 @@ class Search extends Component {
                           onKeyDown={e => e.keyCode === 13 && this.centerMap(v.id)}
                           tabIndex="0"
                         >
-                          {v.name}
+                          {v.name},&#32;{v.country}
                         </div>
                       </li>
                     ))}
