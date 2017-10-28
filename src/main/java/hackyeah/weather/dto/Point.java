@@ -10,14 +10,14 @@ public class Point {
     private double lat;
     private double lng;
 
-    public Point(double lat2, double lng2) {
-        this.lat = lat2;
-        this.lng = lng2;
+    public Point(double lat, double lng) {
+        this.lat = lat;
+        this.lng = lng;
     }
 
-    public Point(String lat2, String lng2) {
-        this.lat = Double.parseDouble(lat2);
-        this.lng = Double.parseDouble(lng2);
+    public Point(String lat, String lng) {
+        this.lat = Double.parseDouble(lat);
+        this.lng = Double.parseDouble(lng);
     }
 
     public double getLng() {

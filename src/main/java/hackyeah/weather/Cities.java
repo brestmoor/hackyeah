@@ -57,12 +57,11 @@ public class Cities {
     @GET
     @Path("/weather")
     @Produces(MediaType.APPLICATION_JSON)
-    public Set<String> getWeather(@QueryParam("lat") String lat, @QueryParam("lng") String lng) {
-        System.out.println(lat);
-        Point point = new Point(lat, lng);
-        List<Point> a = new ArrayList<>();
-        a.add(point);
-        return WeatherFetcher.fetchFromPoints(a);
+    public Set<String> getPointsInArea( @QueryParam("s") String south, @QueryParam("w") String west,
+            @QueryParam("n") String north, @QueryParam("e") String east) {
+        CitiesFinder citiesFinder = new CitiesFinder();
+        List<Point> pointsMatrix = citiesFinder.find(south, west, north, east);
+        return new WeatherFetcher().fetchFromPoints(pointsMatrix);
     }
 
     private Point getPointFromUri(URI geometryUri) {

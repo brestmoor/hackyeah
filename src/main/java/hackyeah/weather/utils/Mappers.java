@@ -63,4 +63,23 @@ public class Mappers {
         return new Point(Double.parseDouble(predictions.findValue("lat").toString()), Double.parseDouble(predictions.findValue("lng").toString()));
     }
 
+
+    public static List<Point> citiesInfoMapper(String stringResponse) {
+        ObjectMapper mapper = new ObjectMapper();
+        JsonNode obj = null;
+        try {
+            obj = mapper.readTree(stringResponse);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        JsonNode elements = obj.findValue("elements");
+        List<Point> result = new ArrayList<>();
+        for (JsonNode element : elements) {
+            String lat = element.findValue("lat").toString();
+            String lon = element.findValue("lon").toString();
+            result.add(new Point(lat, lon));
+        }
+
+        return result;
+    }
 }

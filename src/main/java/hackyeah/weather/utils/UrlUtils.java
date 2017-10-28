@@ -48,4 +48,15 @@ public class UrlUtils {
             throw new RuntimeException();
         }
     }
+
+    public static String getWithFullUrl(String url) {
+		CloseableHttpClient httpClient = HttpClients.createDefault();
+		HttpGet get = new HttpGet(url);
+		try {
+			HttpResponse response = httpClient.execute(get);
+			return EntityUtils.toString(response.getEntity());
+		} catch (IOException e) {
+			throw new RuntimeException();
+		}
+	}
 }

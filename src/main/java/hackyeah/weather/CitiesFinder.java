@@ -1,23 +1,24 @@
 package hackyeah.weather;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.QueryParam;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
 
 import hackyeah.weather.dto.Point;
+import hackyeah.weather.utils.Mappers;
+import hackyeah.weather.utils.UrlUtils;
 
-@Path("/cities")
 public class CitiesFinder {
 
-    @GET
-    @Path("/weather")
-    public List<Point> getPointsInArea(@QueryParam("sw") List<String> leftBottom,
-                                       @QueryParam("ne") List<String> rightTop) {
-        PointsProducer pointsProducer = new PointsProducer();
-        List<Point> pointsMatrix = pointsProducer.get(leftBottom, rightTop);
-        return new ArrayList<>();
-    }
+	public List<Point> find(String south, String west, String north, String east) {
+		String url = "https://www.overpass-api.de/api/interpreter?data=[out:json];node[place=city]";
+		String coords = String.join(",", Arrays.asList(south, west, north, east));
+		coords = "(" + coords + ")";
+		String ending = ";out%20meta;";
+
+		String result = UrlUtils.getWithFullUrl(url + coords + ending);
+		return Mappers.citiesInfoMapper(result);
+	}
 }

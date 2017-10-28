@@ -9,7 +9,7 @@ import hackyeah.weather.utils.UrlUtils;
 
 public class WeatherFetcher {
 
-    public static Set<String> fetchFromPoints(List<Point> pointList) {
+    public Set<String> fetchFromPoints(List<Point> pointList) {
         Set<String> weather = new HashSet<>();
         for (Point point : pointList) {
             weather.add(getWeatherForPoint(point).replace("\n", ""));
@@ -17,7 +17,7 @@ public class WeatherFetcher {
         return weather;
     }
 
-    private static String getWeatherForPoint(Point point) {
+    private String getWeatherForPoint(Point point) {
         String query = String.format("select * from weather.forecast where woeid in (SELECT woeid FROM geo.places WHERE text=\"(%s,%s)\")",
                                      point.getLat(), point.getLng());
         System.out.println(query);
