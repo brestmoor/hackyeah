@@ -1,0 +1,19 @@
+{
+  "name": "hackyeah",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/brestmoor/hackyeah.git"
+  },
+  "author": "Marek Łabuz, Kamila Środa",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/brestmoor/hackyeah/issues"
+  },
+  "homepage": "https://github.com/brestmoor/hackyeah#readme"
+}
