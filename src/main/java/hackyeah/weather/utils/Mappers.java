@@ -23,17 +23,31 @@ public class Mappers {
         List<City> extractedCities = new ArrayList<>();
         for (JsonNode a : predictions) {
             String desc = a.findValue("description").toString();
-            String id = a.findValue("id").toString();
+            String id = a.findValue("place_id").toString();
             String[] properties = desc.split(", ");
             if (properties.length == 3) {
-                extractedCities.add(new City(properties[0], properties[2], id));
+                extractedCities.add(new City(cutFirstChar(properties[0]), cutLastChar(properties[2]),
+                                             cutFirstAndLast(id)));
             }
             if (properties.length == 2) {
-                extractedCities.add(new City(properties[0], properties[1], id));
+                extractedCities.add(new City(cutFirstChar(properties[0]), cutLastChar(properties[1]),
+                                             cutFirstAndLast(id)));
             }
         }
 
         return extractedCities;
+    }
+
+    private static String cutFirstChar(String string) {
+        return string.substring(1, string.length());
+    }
+
+    private static String cutLastChar(String string) {
+        return string.substring(0, string.length() - 1);
+    }
+
+    private static String cutFirstAndLast(String string) {
+        return cutLastChar(cutFirstChar(string));
     }
 
     public static Point pointMapper(String stringResponse) {

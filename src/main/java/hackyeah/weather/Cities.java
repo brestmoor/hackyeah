@@ -3,6 +3,7 @@ package hackyeah.weather;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.ws.rs.GET;
@@ -22,6 +23,7 @@ import hackyeah.weather.dto.City;
 import hackyeah.weather.dto.Point;
 import hackyeah.weather.exceptions.HackYeahWeatherAppException;
 import hackyeah.weather.utils.Mappers;
+import hackyeah.weather.utils.UrlUtils;
 
 @Path("/cities")
 public class Cities {
@@ -33,26 +35,9 @@ public class Cities {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public List<City> getCity(@QueryParam("name") String city) {
-        CloseableHttpClient httpClient = HttpClients.createDefault();
-        URIBuilder builder = new URIBuilder();
-        builder.setScheme("https");
-        builder.setHost("maps.googleapis.com");
-        builder.setPath(path);
-        builder.setParameter("input", city);
-        builder.setParameter("key", KEY);
-        List<City> json = null;
-        try {
-            HttpGet get = new HttpGet(builder.build());
-            HttpResponse response = httpClient.execute(get);
-            String stringResponse = EntityUtils.toString(response.getEntity());
-            json = Mappers.cityMapper(stringResponse);
-        } catch (URISyntaxException | IOException e) {
-            e.printStackTrace();
-        }
-
-        System.out.println(json);
-
-        return json;
+        String stringResponse = UrlUtils
+                .get("https", "maps.googleapis.com", path, Arrays.asList("input", city, "key", KEY));
+        return Mappers.cityMapper(stringResponse);
     }
 
     @GET
