@@ -7,19 +7,19 @@ import javax.ws.rs.WebApplicationException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class Point {
-    private String lng;
-    private String lat;
+    private double lat;
+    private double lng;
 
-    public Point(String lng, String lat) {
-        this.lng = lng;
+    public Point(double lat, double lng) {
         this.lat = lat;
+        this.lng = lng;
     }
 
-    public String getLng() {
+    public double getLng() {
         return lng;
     }
 
-    public String getLat() {
+    public double getLat() {
         return lat;
     }
 
