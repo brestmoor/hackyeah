@@ -20,6 +20,8 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 
+import com.fasterxml.jackson.databind.JsonNode;
+
 import hackyeah.weather.dto.City;
 import hackyeah.weather.dto.Point;
 import hackyeah.weather.exceptions.HackYeahWeatherAppException;
@@ -56,13 +58,10 @@ public class Cities {
     @GET
     @Path("/weather")
     @Produces(MediaType.APPLICATION_JSON)
-    public Set<String> getPointsInArea(@QueryParam("s") String south, @QueryParam("w") String west,
-                                       @QueryParam("n") String north, @QueryParam("e") String east) {
-        // CitiesFinder citiesFinder = new CitiesFinder();
-        // List<Point> pointsMatrix = citiesFinder.find(south, west, north,
-        // east);
-        List<Point> pointsMatrix = Mappers.citiesChecker(CityRepository.getCityList(), new Point(north, west),
-                                                         new Point(south, west));
+    public Set<JsonNode> getPointsInArea(@QueryParam("s") String south, @QueryParam("w") String west,
+                                         @QueryParam("n") String north, @QueryParam("e") String east) {
+        CitiesFinder citiesFinder = new CitiesFinder();
+        List<Point> pointsMatrix = citiesFinder.find(south, west, north, east);
         return new WeatherFetcher().fetchFromPoints(pointsMatrix);
     }
 
