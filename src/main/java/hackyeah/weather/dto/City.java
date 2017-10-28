@@ -23,7 +23,7 @@ public class City extends Point{
 		return new Point(lat, lng);
 	}
 
-	public City(String lat, String lng, String name, String country, String id) {
+	public City(String name, String country, String id, String lat, String lng) {
 		super(lat, lng);
 		this.name = name;
 		this.country = country;
