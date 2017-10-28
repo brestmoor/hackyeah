@@ -7,7 +7,6 @@ import java.util.List;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import hackyeah.weather.Cities;
 import hackyeah.weather.dto.City;
 import hackyeah.weather.dto.Point;
 
@@ -65,11 +64,24 @@ public class Mappers {
                          Double.parseDouble(predictions.findValue("lng").toString()));
     }
 
-    public static List<Point> citiesChecker(List<Cities> citiesList, Point p1, Point p2) {
+    public static List<Point> citiesChecker(List<City> citiesList, Point lewyGorny, Point prawyDolny) {
         List<Point> lp = new ArrayList<>();
-        for (Cities city : citiesList) {
-
+        for (City city : citiesList) {
+            if (checkCity(city, lewyGorny, prawyDolny)) {
+                lp.add(city.getPoint());
+            }
         }
+        return lp;
+    }
+
+    private static boolean checkCity(City city, Point lewyGorny, Point prawyDolny) {
+        if (city.getLat() < lewyGorny.getLat() || city.getLat() > prawyDolny.getLat()) {
+            return false;
+        }
+        if (city.getLng() > lewyGorny.getLng() || city.getLat() < prawyDolny.getLng()) {
+            return false;
+        }
+        return true;
     }
 
     public static List<Point> citiesInfoMapper(String stringResponse) {
