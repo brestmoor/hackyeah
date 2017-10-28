@@ -17,7 +17,8 @@ class Search extends Component {
     }
 
     this.handleInput = this.handleInput.bind(this)
-    this.search = debounce(this.search.bind(this), 500)
+    this.searchCities = debounce(this.searchCities.bind(this), 500)
+    this.searchLagLng = debounce(this.searchLagLng.bind(this), 500)
   }
 
   componentDidMount () {
@@ -30,10 +31,10 @@ class Search extends Component {
     })
   }
 
-  search (text, timestamp) {
+  searchCities (text, timestamp) {
     API.search(text)
       .then((data) => {
-        if (timestamp === this.timestamp) {
+        if (timestamp === this.inputTimestamp) {
           this.setState({
             loading: false,
             data
@@ -42,14 +43,23 @@ class Search extends Component {
       })
   }
 
+  searchLagLng (id, timestamp) {
+    API.getLatLon(id)
+      .then((data) => {
+        if (data && timestamp === this.latLngTimestamp) {
+          Map.setLocation(data.lat, data.lng)
+        }
+      })
+  }
+
   handleInput (e) {
-    this.timestamp = +new Date()
+    this.inputTimestamp = +new Date()
     this.setState({
       loading: true
     })
     const text = e.target.value
     if (text.length) {
-      this.search(text, this.timestamp)
+      this.searchCities(text, this.inputTimestamp)
     } else {
       this.setState({
         loading: false,
@@ -59,13 +69,8 @@ class Search extends Component {
   }
 
   centerMap (id) {
-    API.getLatLon(id)
-      .then((data) => {
-        if (data) {
-          console.log(data)
-          Map.setLocation(data.lng, data.lat)
-        }
-      })
+    this.latLngTimestamp = +new Date()
+    this.searchLagLng(id, this.latLngTimestamp)
   }
 
   render () {
@@ -75,6 +80,7 @@ class Search extends Component {
         <input
           className={style.input}
           onInput={this.handleInput}
+          placeholder="Enter city name"
         />
         {
           data.length || loading
