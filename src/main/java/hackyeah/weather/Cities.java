@@ -47,7 +47,7 @@ public class Cities {
         URI geometryUri = prepareGeometryUri(cityID);
         Point a = getPointFromUri(geometryUri);
         if (a == null) {
-            return new Point("", "");
+            return new Point(0, 0);
         }
         return a;
     }
