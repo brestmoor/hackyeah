@@ -1,6 +1,7 @@
 package hackyeah.weather;
 
 import java.io.IOException;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 
@@ -18,36 +19,83 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 
 import hackyeah.weather.dto.City;
+import hackyeah.weather.dto.Point;
+import hackyeah.weather.exceptions.HackYeahWeatherAppException;
 import hackyeah.weather.utils.Mappers;
 
 @Path("/cities")
 public class Cities {
 
-	private final static String key = "AIzaSyCUJMCuPyx52ZNupvgsQKWD5ESs9GyPQyU";
-	private final static String path = "/maps/api/place/autocomplete/json";
+    private final static String KEY = "AIzaSyCUJMCuPyx52ZNupvgsQKWD5ESs9GyPQyU";
+    private final static String GEOMETRY_PATH = "/maps/api/geocode/json";
+    private final static String path = "/maps/api/place/autocomplete/json";
 
-	@GET
-	@Produces(MediaType.APPLICATION_JSON)
-	public List<City> getCity(@QueryParam("name") String city) {
-		CloseableHttpClient httpClient = HttpClients.createDefault();
-		URIBuilder builder = new URIBuilder();
-		builder.setScheme("https");
-		builder.setHost("maps.googleapis.com");
-		builder.setPath(path);
-		builder.setParameter("input", city);
-		builder.setParameter("key", key);
-		List<City> json = null;
-		try {
-			HttpGet get = new HttpGet(builder.build());
-			HttpResponse response = httpClient.execute(get);
-			String stringResponse = EntityUtils.toString(response.getEntity());
-			json = Mappers.cityMapper(stringResponse);
-		} catch (URISyntaxException | IOException e) {
-			e.printStackTrace();
-		}
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<City> getCity(@QueryParam("name") String city) {
+        CloseableHttpClient httpClient = HttpClients.createDefault();
+        URIBuilder builder = new URIBuilder();
+        builder.setScheme("https");
+        builder.setHost("maps.googleapis.com");
+        builder.setPath(path);
+        builder.setParameter("input", city);
+        builder.setParameter("key", KEY);
+        List<City> json = null;
+        try {
+            HttpGet get = new HttpGet(builder.build());
+            HttpResponse response = httpClient.execute(get);
+            String stringResponse = EntityUtils.toString(response.getEntity());
+            json = Mappers.cityMapper(stringResponse);
+        } catch (URISyntaxException | IOException e) {
+            e.printStackTrace();
+        }
 
-		System.out.println(json);
+        System.out.println(json);
 
-		return json;
-	}
+        return json;
+    }
+
+    @GET
+    @Path("/id")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Point getPointById(@QueryParam("id") String cityID) {
+        URI geometryUri = prepareGeometryUri(cityID);
+        Point a = getPointFromUri(geometryUri);
+        if (a == null) {
+            return new Point("", "");
+        }
+        return a;
+    }
+
+    private Point getPointFromUri(URI geometryUri) {
+        CloseableHttpClient httpClient = HttpClients.createDefault();
+        HttpGet get = new HttpGet(geometryUri);
+        HttpResponse response = null;
+        String stringResponse = null;
+        try {
+            response = httpClient.execute(get);
+            stringResponse = EntityUtils.toString(response.getEntity());
+            System.out.println(stringResponse);
+        } catch (IOException e) {
+            throw new HackYeahWeatherAppException("Sending request failed : " + geometryUri.toString(), e);
+        }
+        if (stringResponse == null) {
+            return null;
+        }
+        return Mappers.pointMapper(stringResponse);
+    }
+
+    private URI prepareGeometryUri(String cityID) {
+        URIBuilder builder = new URIBuilder();
+        builder.setScheme("https");
+        builder.setHost("maps.googleapis.com");
+        builder.setPath(GEOMETRY_PATH);
+        builder.setParameter("place_id", cityID);
+        builder.setParameter("key", KEY);
+        try {
+            return builder.build();
+        } catch (URISyntaxException e) {
+            throw new HackYeahWeatherAppException("Building uri for request failed.", e);
+        }
+    }
 }
