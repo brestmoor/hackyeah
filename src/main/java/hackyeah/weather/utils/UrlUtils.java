@@ -33,8 +33,8 @@ public class UrlUtils {
     public static String get(String scheme, String host, String path, List<String> nameValueList) {
         CloseableHttpClient httpClient = HttpClients.createDefault();
         URIBuilder builder = new URIBuilder();
-        builder.setScheme("https");
-        builder.setHost("maps.googleapis.com");
+        builder.setScheme(scheme);
+        builder.setHost(host);
         builder.setPath(path);
         for (int i = 0; i < nameValueList.size(); i = i + 2) {
             builder.setParameter(nameValueList.get(i), nameValueList.get(i + 1));
@@ -43,7 +43,6 @@ public class UrlUtils {
         try {
             get = new HttpGet(builder.build());
             HttpResponse response = httpClient.execute(get);
-
             return EntityUtils.toString(response.getEntity());
         } catch (URISyntaxException | IOException e) {
             throw new RuntimeException();

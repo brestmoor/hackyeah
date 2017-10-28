@@ -60,6 +60,7 @@ public class Mappers {
         }
         JsonNode predictions = obj.findValue("location");
 
-        return new Point(predictions.findValue("lat").toString(), predictions.findValue("lng").toString());
+        return new Point(Double.parseDouble(predictions.findValue("lat").toString()), Double.parseDouble(predictions.findValue("lng").toString()));
     }
+
 }

@@ -7,27 +7,32 @@ import javax.ws.rs.WebApplicationException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class Point {
-    private String lng;
-    private String lat;
+    private double lat;
+    private double lng;
 
-    public Point(String lng, String lat) {
-        this.lng = lng;
-        this.lat = lat;
+    public Point(double lat2, double lng2) {
+        this.lat = lat2;
+        this.lng = lng2;
     }
 
-    public String getLng() {
+    public Point(String lat2, String lng2) {
+        this.lat = Double.parseDouble(lat2);
+        this.lng = Double.parseDouble(lng2);
+    }
+
+    public double getLng() {
         return lng;
     }
 
-    public String getLat() {
+    public double getLat() {
         return lat;
     }
 
     public static Point fromString(String jsonRepresentation) {
-        ObjectMapper mapper = new ObjectMapper(); //Jackson's JSON marshaller
-        Point o= null;
+        ObjectMapper mapper = new ObjectMapper(); // Jackson's JSON marshaller
+        Point o = null;
         try {
-            o = mapper.readValue(jsonRepresentation, Point.class );
+            o = mapper.readValue(jsonRepresentation, Point.class);
         } catch (IOException e) {
             throw new WebApplicationException();
         }
