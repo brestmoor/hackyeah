@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 import debounce from 'lodash/debounce'
 
+import Map from '../../map'
 import Loader from '../Loader/Loader'
-
 import API from '../../api'
 
 import style from './Search.scss'
@@ -18,6 +18,16 @@ class Search extends Component {
 
     this.handleInput = this.handleInput.bind(this)
     this.search = debounce(this.search.bind(this), 500)
+  }
+
+  componentDidMount () {
+    this.map = Map.getInstance()
+    this.map.on('click', () => {
+      this.setState({
+        data: [],
+        loading: false
+      })
+    })
   }
 
   search (text, timestamp) {
@@ -50,8 +60,11 @@ class Search extends Component {
 
   centerMap (id) {
     API.getLatLon(id)
-      .then(() => {
-
+      .then((data) => {
+        if (data) {
+          console.log(data)
+          Map.setLocation(data.lng, data.lat)
+        }
       })
   }
 
@@ -74,7 +87,7 @@ class Search extends Component {
                         <div
                           role="button"
                           onClick={() => this.centerMap(v.id)}
-                          onKeyDown={console.log}
+                          onKeyDown={e => e.keyCode === 13 && this.centerMap(v.id)}
                           tabIndex="0"
                         >
                           {v.name}

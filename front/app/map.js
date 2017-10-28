@@ -46,7 +46,11 @@ const Map = (() => {
         map = createMap()
       }
       return map
+    },
+    setLocation (lat, lon) {
+      map.setView([lat, lon], 13)
     }
+
   }
 })()
 
