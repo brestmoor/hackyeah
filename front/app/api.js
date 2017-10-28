@@ -1,11 +1,12 @@
 import axios from 'axios'
 
 const api = {
-  search: text =>
-    axios.get(`http://pl-l-pc0cmhkz:9091/rest/cities?name=${text}`)
-      .then(({ data }) => data)
-      .catch(() => [])
-
+  search: text => axios.get(`http://192.168.43.73:9091/rest/cities?name=${text}`)
+    .then(({ data }) => data)
+    .catch(() => []),
+  getLatLon: id => axios.get(`http://192.168.43.73:9091/rest/cities?name=${id}`)
+    .then(({ data }) => data)
+    .catch(() => null)
 }
 
 export default api

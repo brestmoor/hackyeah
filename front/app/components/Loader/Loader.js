@@ -19,7 +19,7 @@ function Loading () {
 function Loader ({ condition, children }) {
   return (
     condition
-      ? <Loading />
+      ? <div style={{ minHeight: 100 }}><Loading /></div>
       : children
   )
 }

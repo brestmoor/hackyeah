@@ -48,6 +48,13 @@ class Search extends Component {
     }
   }
 
+  centerMap (id) {
+    API.getLatLon(id)
+      .then(() => {
+
+      })
+  }
+
   render () {
     const { data, loading } = this.state
     return (
@@ -63,7 +70,16 @@ class Search extends Component {
                 <Loader condition={loading}>
                   <ul>
                     {data.map(v => (
-                      <li key={v.id}>{v.name}</li>
+                      <li key={v.id}>
+                        <div
+                          role="button"
+                          onClick={() => this.centerMap(v.id)}
+                          onKeyDown={console.log}
+                          tabIndex="0"
+                        >
+                          {v.name}
+                        </div>
+                      </li>
                     ))}
                   </ul>
                 </Loader>
