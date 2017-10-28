@@ -1,18 +1,28 @@
 package hackyeah.weather;
 
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import hackyeah.weather.dto.Point;
 import hackyeah.weather.utils.UrlUtils;
 
 public class WeatherFetcher {
 
-    public Set<String> fetchFromPoints(List<Point> pointList) {
-        Set<String> weather = new HashSet<>();
-        weather.add(getWeatherForPoint(pointList).replace("\n", ""));
-        return weather;
+    public Set<JsonNode> fetchFromPoints(List<Point> pointList) {
+		ObjectMapper objectMapper = new ObjectMapper();
+
+        Set<JsonNode> weather = new HashSet<>();
+		try {
+			weather.add(objectMapper.readTree(getWeatherForPoint(pointList).replace("\n", "")));
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+		return weather;
     }
 
     private String getWeatherForPoint(List<Point> point) {

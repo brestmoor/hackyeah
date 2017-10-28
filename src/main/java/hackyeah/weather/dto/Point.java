@@ -7,8 +7,8 @@ import javax.ws.rs.WebApplicationException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class Point {
-    private double lat;
-    private double lng;
+    protected double lat;
+    protected double lng;
 
     public Point(double lat, double lng) {
         this.lat = lat;
