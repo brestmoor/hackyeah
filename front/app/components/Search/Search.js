@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import debounce from 'lodash/debounce'
 
+import Loader from '../Loader/Loader'
+
 import API from '../../api'
 
 import style from './Search.scss'
@@ -18,21 +20,32 @@ class Search extends Component {
     this.search = debounce(this.search.bind(this), 500)
   }
 
-  search () {
+  search (text, timestamp) {
     API.search()
       .then((data) => {
-        this.setState({
-          loading: false,
-          data
-        })
+        if (timestamp === this.timestamp) {
+          this.setState({
+            loading: false,
+            data
+          })
+        }
       })
   }
 
   handleInput (e) {
+    this.timestamp = +new Date()
     this.setState({
       loading: true
     })
-    this.search(e.target.value)
+    const text = e.target.value
+    if (text.length) {
+      this.search(text, this.timestamp)
+    } else {
+      this.setState({
+        loading: false,
+        data: []
+      })
+    }
   }
 
   render () {
@@ -43,19 +56,21 @@ class Search extends Component {
           className={style.input}
           onInput={this.handleInput}
         />
-        <div className={style.results}>
-          {
-            loading
-              ? <div>Loading</div>
-              : (
-                <ul>
-                  {data.map(text => (
-                    <li key={text}>{text}</li>
-                  ))}
-                </ul>
-              )
-          }
-        </div>
+        {
+          data.length || loading
+            ? (
+              <div className={style.results}>
+                <Loader condition={loading}>
+                  <ul>
+                    {data.map(text => (
+                      <li key={text}>{text}</li>
+                    ))}
+                  </ul>
+                </Loader>
+              </div>
+            )
+            : null
+        }
       </div>
     )
   }
