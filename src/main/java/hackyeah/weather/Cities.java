@@ -3,8 +3,10 @@ package hackyeah.weather;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -35,8 +37,8 @@ public class Cities {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public List<City> getCity(@QueryParam("name") String city) {
-        String stringResponse = UrlUtils
-                .get("https", "maps.googleapis.com", path, Arrays.asList("input", city, "key", KEY));
+        String stringResponse = UrlUtils.get("https", "maps.googleapis.com", path,
+                                             Arrays.asList("input", city, "key", KEY));
         return Mappers.cityMapper(stringResponse);
     }
 
@@ -50,6 +52,17 @@ public class Cities {
             return new Point("", "");
         }
         return a;
+    }
+
+    @GET
+    @Path("/weather")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Set<String> getWeather(@QueryParam("lat") String lat, @QueryParam("lng") String lng) {
+        System.out.println(lat);
+        Point point = new Point(lat, lng);
+        List<Point> a = new ArrayList<>();
+        a.add(point);
+        return WeatherFetcher.fetchFromPoints(a);
     }
 
     private Point getPointFromUri(URI geometryUri) {
