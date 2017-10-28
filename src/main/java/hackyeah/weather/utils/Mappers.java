@@ -7,6 +7,7 @@ import java.util.List;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import hackyeah.weather.Cities;
 import hackyeah.weather.dto.City;
 import hackyeah.weather.dto.Point;
 
@@ -60,9 +61,16 @@ public class Mappers {
         }
         JsonNode predictions = obj.findValue("location");
 
-        return new Point(Double.parseDouble(predictions.findValue("lat").toString()), Double.parseDouble(predictions.findValue("lng").toString()));
+        return new Point(Double.parseDouble(predictions.findValue("lat").toString()),
+                         Double.parseDouble(predictions.findValue("lng").toString()));
     }
 
+    public static List<Point> citiesChecker(List<Cities> citiesList, Point p1, Point p2) {
+        List<Point> lp = new ArrayList<>();
+        for (Cities city : citiesList) {
+
+        }
+    }
 
     public static List<Point> citiesInfoMapper(String stringResponse) {
         ObjectMapper mapper = new ObjectMapper();

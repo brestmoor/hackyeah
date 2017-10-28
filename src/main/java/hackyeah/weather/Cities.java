@@ -3,7 +3,6 @@ package hackyeah.weather;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
@@ -57,10 +56,13 @@ public class Cities {
     @GET
     @Path("/weather")
     @Produces(MediaType.APPLICATION_JSON)
-    public Set<String> getPointsInArea( @QueryParam("s") String south, @QueryParam("w") String west,
-            @QueryParam("n") String north, @QueryParam("e") String east) {
-        CitiesFinder citiesFinder = new CitiesFinder();
-        List<Point> pointsMatrix = citiesFinder.find(south, west, north, east);
+    public Set<String> getPointsInArea(@QueryParam("s") String south, @QueryParam("w") String west,
+                                       @QueryParam("n") String north, @QueryParam("e") String east) {
+        // CitiesFinder citiesFinder = new CitiesFinder();
+        // List<Point> pointsMatrix = citiesFinder.find(south, west, north,
+        // east);
+        List<Point> pointsMatrix = Mappers.citiesChecker(CityRepository.getCityList(), new Point(north, west),
+                                                         new Point(south, west));
         return new WeatherFetcher().fetchFromPoints(pointsMatrix);
     }
 
