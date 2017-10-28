@@ -3,6 +3,7 @@
     "rules": {
         "semi": ["error", "never"],
         "quotes": ["error", "single"],
+        "comma-dangle": ["error", "never"],
         "linebreak-style": 0,
         "no-console": 0
     }
