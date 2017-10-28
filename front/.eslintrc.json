@@ -2,9 +2,15 @@
     "extends": "airbnb",
     "rules": {
         "semi": ["error", "never"],
+        "space-before-function-paren": ["error", "always"],
         "quotes": ["error", "single"],
         "comma-dangle": ["error", "never"],
+        "react/jsx-filename-extension": 0,
         "linebreak-style": 0,
         "no-console": 0
+    },
+    "env": {
+        "browser": true,
+        "node": true
     }
 }
