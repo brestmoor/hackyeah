@@ -61,6 +61,9 @@ class Popup extends Component {
 
   handleSubmit () {
     API.sendAnnotation(this.state.form)
+      .then(() => {
+        this.map.fire('moveend')
+      })
     this.setState({
       form: {}
     }, () => {
@@ -84,8 +87,8 @@ class Popup extends Component {
               <option value="flood">Flood</option>
               <option value="earthquake">Earthquake</option>
               <option value="duststorm">Duststorm</option>
-              <option value="heavy thunderstorm">Heavy Thunderstorm</option>
-              <option value="heavy snow">Heavy Snow</option>
+              <option value="heavy_thunderstorm">Heavy Thunderstorm</option>
+              <option value="heavy_snow">Heavy Snow</option>
             </select>
             <div>Level of danger:</div>
             <select onChange={e => this.updateForm({ severity: e.target.value })}>
