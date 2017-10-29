@@ -6,6 +6,7 @@ import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 import javax.ws.rs.GET;
@@ -63,8 +64,8 @@ public class Cities {
     @GET
     @Path("/weather")
     @Produces(MediaType.APPLICATION_JSON)
-    public String getPointsInArea(@QueryParam("s") String south, @QueryParam("w") String west,
-                                  @QueryParam("n") String north, @QueryParam("e") String east) {
+    public Set<JsonNode> getPointsInArea(@QueryParam("s") String south, @QueryParam("w") String west,
+                                         @QueryParam("n") String north, @QueryParam("e") String east) {
 
         List<Point> pointsMatrix = Mappers.citiesChecker(CityRepository.getCityList(), new Point(north, west),
                                                          new Point(south, east));
@@ -79,20 +80,24 @@ public class Cities {
             Set<JsonNode> pointFromApi = new WeatherFetcher().fetchFromPoints(pointsMatrix);
             JsonNode node = (JsonNode) pointFromApi.toArray()[0];
             appendAlerts(alertsInRange, (ObjectNode) node);
-
-            return extractWeather(node);
+            extracter(node);
+            return pointFromApi;
         } catch (Exception e) {
-            return "";
+            return new TreeSet<JsonNode>();
         }
     }
 
-    private String extractWeather(JsonNode fetched) {
-        return extracter(fetched);
-    }
-
-    private String extracter(JsonNode node) {
-        // ObjectNode n = (JsonNode) node;
-        return node.asText();
+    private JsonNode extracter(JsonNode node) {
+        JsonNode query = node.findValue("query");
+        JsonNode results = query.findValue("results");
+        JsonNode channel = results.findValue("channel");
+        for (JsonNode obj : channel) {
+            ((ObjectNode) obj).remove("units");
+            ((ObjectNode) obj).remove("astronomy");
+            ((ObjectNode) obj).remove("image");
+            ((ObjectNode) obj).remove("atmosphere");
+        }
+        return node;
     }
 
     private void appendAlerts(List<Alert> alerts, ObjectNode node) throws JsonProcessingException {
