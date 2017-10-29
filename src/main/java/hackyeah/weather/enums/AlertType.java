@@ -9,9 +9,9 @@ public enum AlertType {
 	TSUNAMI("tsunami"),
 	FLOOD("flood"),
 	EARTHQUAKE("earthquake"),
-	DUST_STORM("duststorm"),
-	HEAVY_THUNDERSTORM("thunderstorm"),
-	HEAVY_SNOW("snow");
+	DUST_STORM("dust_storm"),
+	HEAVY_THUNDERSTORM("heavy_thunderstorm"),
+	HEAVY_SNOW("heavy_snow");
 
 
 	private String code;
