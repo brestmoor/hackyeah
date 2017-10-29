@@ -17,6 +17,8 @@ public class Alert {
 		this.comment = comment;
 	}
 
+	public Alert() {
+	}
 
 	public Point getPoint() {
 		return point;
