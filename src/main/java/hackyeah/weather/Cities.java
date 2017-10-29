@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.stream.Collectors;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -64,6 +65,7 @@ public class Cities {
 
         List<Point> pointsMatrix = Mappers.citiesChecker(CityRepository.getCityList(), new Point(north, west),
                                                          new Point(south, east));
+        pointsMatrix = pointsMatrix.stream().limit(30).collect(Collectors.toList());
         try {
             return new WeatherFetcher().fetchFromPoints(pointsMatrix);
         } catch (Exception e) {
