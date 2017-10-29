@@ -1,5 +1,7 @@
 package hackyeah.weather.enums;
 
+import com.fasterxml.jackson.annotation.JsonValue;
+
 public enum AlertType {
 
 	HURRICANE("hurricane"),
@@ -16,5 +18,10 @@ public enum AlertType {
 
 	AlertType(String code) {
 		this.code = code;
+	}
+
+	@JsonValue
+	public String getCode() {
+		return code;
 	}
 }
