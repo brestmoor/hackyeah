@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import debounce from 'lodash/debounce'
+import capitalize from 'lodash/capitalize'
 
 import Popup from '../Popup/Popup'
 import Map from '../../map'
@@ -12,7 +13,6 @@ class MapComponent extends Component {
   constructor (props) {
     super(props)
 
-    this.can = true
     this.mapMoveEnd = debounce(this.mapMoveEnd.bind(this), 250)
   }
 
@@ -31,7 +31,7 @@ class MapComponent extends Component {
 
     this.can = false
     API.mapBounds(w, s, e, n)
-      .then((data) => {
+      .then(({ data, alerts } = {}) => {
         if (data && data.forEach) {
           data.forEach(({ item }) => {
             const { condition, lat, long } = item
@@ -45,6 +45,18 @@ class MapComponent extends Component {
             }
           })
           Map.refreshClusters()
+        }
+        if (alerts && alerts.forEach) {
+          alerts.forEach((item) => {
+            const {
+              point: { lat, lng },
+              alertType,
+              severity,
+              comment
+            } = item
+            const marker = Map.setMarker(lat, lng, severity)
+            marker.bindPopup(`<div style="max-width: 200px"><b>Type:</b> ${capitalize(alertType)}<br /><b>Level of Danger:</b> ${capitalize(severity)}<br />${comment ? `<b>Comments:</b> ${comment}` : ''}</div>`)
+          })
         }
       })
   }

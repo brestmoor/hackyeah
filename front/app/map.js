@@ -6,8 +6,14 @@ export const toCelsius = temp => Math.round((temp - 32) * (5 / 9))
 
 const Map = (() => {
   let map = null
-  let markers = null
+  let weatherMarkers = null
   const data = {}
+
+  const alertIconLookupTable = {
+    low: 'green',
+    medium: 'yellow',
+    high: 'red'
+  }
 
   const getIcon = (code) => {
     switch (code) {
@@ -62,16 +68,29 @@ const Map = (() => {
     }
   }
 
-  const setIcon = (latitude, longitude, code, temp) => {
+  const setIcon = (lat, lng, code, temp) => {
     const celcius = toCelsius(temp)
     const iconSun = new L.DivIcon({
       className: 'clear',
       html: `<div class="weather-icon"><img width="60" height="60" src="${getIcon(code)}"/><div>${celcius}°C</div></div>`
     })
 
-    const marker = L.marker([latitude, longitude], { icon: iconSun })
-    markers.addLayer(marker)
+    const marker = L.marker([lat, lng], { icon: iconSun })
+    weatherMarkers.addLayer(marker)
 
+    return marker
+  }
+
+  const setMarker = (lat, lng, severity) => {
+    const icon = new L.Icon({
+      iconUrl: `./assets/marker-icon-2x-${alertIconLookupTable[severity]}.png`,
+      iconSize: [25, 41],
+      iconAnchor: [12, 41],
+      popupAnchor: [1, -34]
+    })
+
+    const marker = L.marker([lat, lng], { icon })
+    map.addLayer(marker)
     return marker
   }
 
@@ -98,14 +117,14 @@ const Map = (() => {
     map = L.map('mapid', {
       maxZoom: 9
     }).setView([51.509865, -0.118092], 13)
-    markers = L.markerClusterGroup({
+    weatherMarkers = L.markerClusterGroup({
       iconCreateFunction: (cluster) => {
         const children = cluster.getAllChildMarkers()
         const item = children[0]
         return item.options.icon
       }
     })
-    map.addLayer(markers)
+    map.addLayer(weatherMarkers)
 
     initMap()
 
@@ -133,10 +152,11 @@ const Map = (() => {
       return data[key]
     },
     refreshClusters () {
-      markers.refreshClusters()
+      weatherMarkers.refreshClusters()
     },
     setCurrentLocation,
-    getIcon
+    getIcon,
+    setMarker
   }
 })()
 

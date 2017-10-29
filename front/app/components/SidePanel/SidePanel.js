@@ -17,7 +17,6 @@ class SidePanel extends Component {
 
   render () {
     const { open, data } = this.props
-    console.log(data)
     return (
       <div className={cx(style.sidePanel, open && style.sidePanelOpen)}>
         {data && (
@@ -26,7 +25,7 @@ class SidePanel extends Component {
             <table className={style.table}>
               <tbody>
                 {data.forecast.map(item => (
-                  <tr>
+                  <tr key={item.date}>
                     <td>{item.day}</td>
                     <td>{item.date}</td>
                     <td>
@@ -52,7 +51,11 @@ class SidePanel extends Component {
 SidePanel.propTypes = {
   onPanelRequestClose: PropTypes.func,
   open: PropTypes.bool.isRequired,
-  data: PropTypes.object.isRequired
+  data: PropTypes.object
+}
+
+SidePanel.defaultProps = {
+  data: null
 }
 
 SidePanel.defaultProps = {
