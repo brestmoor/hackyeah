@@ -16,7 +16,7 @@ public class CitiesFinder {
         String ending = ";out%20meta;";
 
         String result = UrlUtils.getWithFullUrl(url + coords + ending);
-        System.out.println(result);
+        // System.out.println(result);
         return Mappers.citiesInfoMapper(result);
     }
 }

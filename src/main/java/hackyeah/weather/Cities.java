@@ -5,6 +5,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
@@ -82,7 +83,8 @@ public class Cities {
         AlertManager alertManager = new AlertManager();
         List<Alert> alertsInRange = Mappers.citiesCheckerForAlerts(alertManager.getAlerts(), new Point(north, west),
                                                                    new Point(south, east));
-        pointsMatrix = pointsMatrix.stream().limit(20).collect(Collectors.toList());
+        Collections.shuffle(pointsMatrix);
+        pointsMatrix = pointsMatrix.stream().limit(25).collect(Collectors.toList());
 
         try {
             Set<JsonNode> pointFromApi = new WeatherFetcher().fetchFromPoints(pointsMatrix);
@@ -121,7 +123,7 @@ public class Cities {
         try {
             response = httpClient.execute(get);
             stringResponse = EntityUtils.toString(response.getEntity());
-            System.out.println(stringResponse);
+            // System.out.println(stringResponse);
         } catch (IOException e) {
             throw new HackYeahWeatherAppException("Sending request failed : " + geometryUri.toString(), e);
         }
