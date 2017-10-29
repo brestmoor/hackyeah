@@ -32,7 +32,7 @@ public class CityCSVReader {
     }
 
     private City makeCity(String cityText, int i) {
-        String[] values = cityText.split(",");
+        String[] values = cityText.split("/[^,\\s\\\\]/");
         return new City(values[0], values[5], String.valueOf(i), values[2], values[3]);
     }
 }
