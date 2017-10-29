@@ -13,7 +13,7 @@ public class CityCSVReader {
 
     public List<City> readAll() {
         try {
-            InputStream is = getClass().getClassLoader().getResourceAsStream("Polska.csv");
+            InputStream is = getClass().getClassLoader().getResourceAsStream("7000cities.csv");
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(is));
             String line = bufferedReader.readLine();
             int i = 0;
@@ -32,7 +32,7 @@ public class CityCSVReader {
     }
 
     private City makeCity(String cityText, int i) {
-        String[] values = cityText.split(";");
-        return new City(values[0], "PL", String.valueOf(i), values[2], values[1]);
+        String[] values = cityText.split(",");
+        return new City(values[0], values[5], String.valueOf(i), values[2], values[3]);
     }
 }
