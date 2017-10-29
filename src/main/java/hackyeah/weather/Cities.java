@@ -123,7 +123,7 @@ public class Cities {
         try {
             response = httpClient.execute(get);
             stringResponse = EntityUtils.toString(response.getEntity());
-            System.out.println(stringResponse);
+            // System.out.println(stringResponse);
         } catch (IOException e) {
             throw new HackYeahWeatherAppException("Sending request failed : " + geometryUri.toString(), e);
         }
