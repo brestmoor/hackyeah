@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import hackyeah.weather.dto.Alert;
 import hackyeah.weather.dto.City;
 import hackyeah.weather.dto.Point;
 
@@ -67,25 +68,15 @@ public class Mappers {
 
     public static List<Point> citiesChecker(List<City> citiesList, Point lewyGorny, Point prawyDolny) {
         return citiesList.stream().filter(a -> checkCity(a, lewyGorny, prawyDolny)).collect(Collectors.toList());
-        // List<Point> lp = new ArrayList<>();
-        // for (City city : citiesList) {
-        // if (checkCity(city, lewyGorny, prawyDolny)) {
-        // lp.add(city.getPoint());
-        // }
-        // }
-        // return lp;
     }
 
-    private static boolean checkCity(City city, Point lewyGorny, Point prawyDolny) {
-        // if (city.getName().contains("Kra")) {
-        // System.out.println(city.getLat() < lewyGorny.getLat());
-        // System.out.println(city.getLat() > prawyDolny.getLat());
-        // System.out.println(city.getLng() > lewyGorny.getLng());
-        // System.out.println(city.getLng() < prawyDolny.getLng());
-        // }
+    public static List<Alert> citiesCheckerForAlerts(List<Alert> citiesList, Point lewyGorny, Point prawyDolny) {
+        return citiesList.stream().filter(alert -> checkCity(alert.getPoint(), lewyGorny, prawyDolny)).collect(Collectors.toList());
+    }
+
+    private static boolean checkCity(Point city, Point lewyGorny, Point prawyDolny) {
         if (city.getLat() < lewyGorny.getLat() && city.getLat() > prawyDolny.getLat()
                 && city.getLng() > lewyGorny.getLng() && city.getLng() < prawyDolny.getLng()) {
-            // System.out.println(city.getName());
             return true;
         }
 

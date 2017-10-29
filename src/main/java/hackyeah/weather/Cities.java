@@ -3,6 +3,7 @@ package hackyeah.weather;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
@@ -62,6 +63,15 @@ public class Cities {
     }
 
     @GET
+    @Path("/advanced")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Set<JsonNode> jeszczeJedenRestDlaMarka(@QueryParam("lat") String lat, @QueryParam("lon") String lon) {
+        List<Point> pointList = new ArrayList<>();
+        pointList.add(new Point(lat, lon));
+        return new WeatherFetcher().fetchFromPoints(pointList);
+    }
+
+    @GET
     @Path("/weather")
     @Produces(MediaType.APPLICATION_JSON)
     public Set<JsonNode> getPointsInArea(@QueryParam("s") String south, @QueryParam("w") String west,
@@ -69,21 +79,38 @@ public class Cities {
 
         List<Point> pointsMatrix = Mappers.citiesChecker(CityRepository.getCityList(), new Point(north, west),
                                                          new Point(south, east));
-        pointsMatrix = pointsMatrix.stream().limit(30).collect(Collectors.toList());
+
         AlertManager alertManager = new AlertManager();
+        List<Alert> alertsInRange = Mappers.citiesCheckerForAlerts(alertManager.getAlerts(), new Point(north, west),
+                                                                   new Point(south, east));
+
+        pointsMatrix = pointsMatrix.stream().limit(20).collect(Collectors.toList());
 
         try {
             Set<JsonNode> pointFromApi = new WeatherFetcher().fetchFromPoints(pointsMatrix);
-            JsonNode node = (JsonNode)pointFromApi.toArray()[0];
-            appendAlerts(alertManager.getAlerts(), (ObjectNode) node);
+            JsonNode node = (JsonNode) pointFromApi.toArray()[0];
+            appendAlerts(alertsInRange, (ObjectNode) node);
+            extracter(node);
             return pointFromApi;
         } catch (Exception e) {
             return new TreeSet<JsonNode>();
         }
     }
 
-    private void appendAlerts(List<Alert> alerts, ObjectNode node)
-            throws JsonProcessingException {
+    private JsonNode extracter(JsonNode node) {
+        JsonNode query = node.findValue("query");
+        JsonNode results = query.findValue("results");
+        JsonNode channel = results.findValue("channel");
+        for (JsonNode obj : channel) {
+            ((ObjectNode) obj).remove("units");
+            ((ObjectNode) obj).remove("astronomy");
+            ((ObjectNode) obj).remove("image");
+            ((ObjectNode) obj).remove("atmosphere");
+        }
+        return node;
+    }
+
+    private void appendAlerts(List<Alert> alerts, ObjectNode node) throws JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();
         node.put("alerts", objectMapper.writeValueAsString(alerts));
     }

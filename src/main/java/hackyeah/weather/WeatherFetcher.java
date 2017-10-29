@@ -1,8 +1,11 @@
 package hackyeah.weather;
 
 import java.io.IOException;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -12,6 +15,8 @@ import hackyeah.weather.dto.Point;
 import hackyeah.weather.utils.UrlUtils;
 
 public class WeatherFetcher {
+
+    private Map<Point, Long> cashe = new HashMap<>();
 
     public Set<JsonNode> fetchFromPoints(List<Point> pointList) {
         ObjectMapper objectMapper = new ObjectMapper();
@@ -41,7 +46,15 @@ public class WeatherFetcher {
         String text = "";
 
         for (Point p : point) {
-            text += "text=\"(" + p.getLat() + "," + p.getLng() + ")\" or ";
+            if (isInCashe(p)) {
+                removeFromCashe(p, new Date().getTime());
+            } else {
+                cashe.put(p, new Date().getTime());
+            }
+        }
+
+        for (Map.Entry<Point, Long> p : cashe.entrySet()) {
+            text += "text=\"(" + p.getKey().getLat() + "," + p.getKey().getLng() + ")\" or ";
         }
         if (point.size() == 1) {
             System.out.println(text);
@@ -50,4 +63,15 @@ public class WeatherFetcher {
         System.out.println(text);
         return text.substring(0, text.length() - 4);
     }
+
+    private void removeFromCashe(Point p, long time) {
+        if (cashe.get(p) - time > 1000 * 60 * 10) {
+            cashe.remove(p);
+        }
+    }
+
+    private boolean isInCashe(Point p) {
+        return cashe.containsKey(p);
+    }
+
 }
