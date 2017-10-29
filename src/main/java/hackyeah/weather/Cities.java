@@ -22,8 +22,12 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
+import hackyeah.weather.dto.Alert;
 import hackyeah.weather.dto.City;
 import hackyeah.weather.dto.Point;
 import hackyeah.weather.exceptions.HackYeahWeatherAppException;
@@ -66,11 +70,22 @@ public class Cities {
         List<Point> pointsMatrix = Mappers.citiesChecker(CityRepository.getCityList(), new Point(north, west),
                                                          new Point(south, east));
         pointsMatrix = pointsMatrix.stream().limit(30).collect(Collectors.toList());
+        AlertManager alertManager = new AlertManager();
+
         try {
-            return new WeatherFetcher().fetchFromPoints(pointsMatrix);
+            Set<JsonNode> pointFromApi = new WeatherFetcher().fetchFromPoints(pointsMatrix);
+            JsonNode node = (JsonNode)pointFromApi.toArray()[0];
+            appendAlerts(alertManager.getAlerts(), (ObjectNode) node);
+            return pointFromApi;
         } catch (Exception e) {
             return new TreeSet<JsonNode>();
         }
+    }
+
+    private void appendAlerts(List<Alert> alerts, ObjectNode node)
+            throws JsonProcessingException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        node.put("alerts", objectMapper.writeValueAsString(alerts));
     }
 
     private Point getPointFromUri(URI geometryUri) {
