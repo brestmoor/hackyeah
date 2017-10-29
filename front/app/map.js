@@ -2,6 +2,8 @@ import L from 'leaflet'
 
 require('leaflet.markercluster/dist/leaflet.markercluster')
 
+export const toCelsius = temp => Math.round((temp - 32) * (5 / 9))
+
 const Map = (() => {
   let map = null
   let markers = null
@@ -11,6 +13,10 @@ const Map = (() => {
     switch (code) {
       case '3':
       case '4':
+      case '37':
+      case '38':
+      case '45':
+      case '47':
         return './assets/Thunderstorms.png'
       case '5':
       case '6':
@@ -21,12 +27,18 @@ const Map = (() => {
       case '11':
       case '12':
       case '13':
+      case '39':
+      case '40':
         return './assets/Drizzle.png'
       case '14':
       case '15':
       case '16':
       case '17':
       case '18':
+      case '41':
+      case '42':
+      case '43':
+      case '46':
         return './assets/Snow.png'
       case '19':
       case '20':
@@ -41,28 +53,23 @@ const Map = (() => {
       case '28':
       case '29':
       case '30':
+      case '44':
         return './assets/Cloudy3.png'
-      case '31':
-      case '32':
-      case '33':
-      case '34':
-        return './assets/Sunny.png'
       case '35':
         return './assets/Slight Drizzle.png'
-      case '36':
-        return './assets/Sunny.png'
       default:
         return './assets/Sunny.png'
     }
   }
 
   const setIcon = (latitude, longitude, code, temp) => {
-    const iconSun = L.icon({
-      iconUrl: getIcon(code),
-      iconSize: [60, 60]
+    const celcius = toCelsius(temp)
+    const iconSun = new L.DivIcon({
+      className: 'clear',
+      html: `<div class="weather-icon"><img width="60" height="60" src="${getIcon(code)}"/><div>${celcius}°C</div></div>`
     })
+
     const marker = L.marker([latitude, longitude], { icon: iconSun })
-    marker.bindTooltip(`${Math.round((temp - 32) * (5 / 9))}°C`)
     markers.addLayer(marker)
 
     return marker
@@ -78,7 +85,7 @@ const Map = (() => {
 
   const initMap = () => {
     L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
-      maxZoom: 13,
+      maxZoom: 9,
       minZoom: 4,
       attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
       '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
@@ -89,7 +96,7 @@ const Map = (() => {
 
   const createMap = () => {
     map = L.map('mapid', {
-      maxZoom: 20
+      maxZoom: 9
     }).setView([51.509865, -0.118092], 13)
     markers = L.markerClusterGroup({
       iconCreateFunction: (cluster) => {
@@ -101,8 +108,6 @@ const Map = (() => {
     map.addLayer(markers)
 
     initMap()
-
-    setCurrentLocation()
 
     return map
   }
@@ -129,7 +134,9 @@ const Map = (() => {
     },
     refreshClusters () {
       markers.refreshClusters()
-    }
+    },
+    setCurrentLocation,
+    getIcon
   }
 })()
 

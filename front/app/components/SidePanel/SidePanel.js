@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 
 import cx from 'classnames'
 
-import Map from '../../map'
+import Map, { toCelsius } from '../../map'
 
 import style from './SidePanel.scss'
 
@@ -17,9 +17,33 @@ class SidePanel extends Component {
 
   render () {
     const { open, data } = this.props
+    console.log(data)
     return (
       <div className={cx(style.sidePanel, open && style.sidePanelOpen)}>
-        {data}
+        {data && (
+          <div>
+            <h3>{data.title}</h3>
+            <table className={style.table}>
+              <tbody>
+                {data.forecast.map(item => (
+                  <tr>
+                    <td>{item.day}</td>
+                    <td>{item.date}</td>
+                    <td>
+                      <div>
+                        <img alt={item.text} width="30" height="30" src={Map.getIcon(item.code)} />
+                        {item.text}
+                      </div>
+                    </td>
+                    <td>
+                      <span>{`${toCelsius(item.low)}°C - ${toCelsius(item.high)}°C`}</span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
       </div>
     )
   }

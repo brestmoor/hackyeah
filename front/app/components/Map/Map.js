@@ -6,6 +6,8 @@ import Popup from '../Popup/Popup'
 import Map from '../../map'
 import API from '../../api'
 
+import style from './Map.scss'
+
 class MapComponent extends Component {
   constructor (props) {
     super(props)
@@ -38,7 +40,7 @@ class MapComponent extends Component {
               Map.set(key, item)
               const icon = Map.setIcon(lat, long, condition.code, condition.temp)
               icon.on('click', () => {
-                onWeatherIconOpen()
+                onWeatherIconOpen(item)
               })
             }
           })
@@ -50,7 +52,14 @@ class MapComponent extends Component {
   render () {
     return [
       <div key="map" id="mapid" style={{ height: '100vh' }} />,
-      <Popup key="popup" />
+      <Popup key="popup" />,
+      <button
+        key="button"
+        className={style.currentLocalization}
+        onClick={Map.setCurrentLocation}
+      >
+        ◎
+      </button>
     ]
   }
 }

@@ -78,7 +78,7 @@ class Search extends Component {
     const { data, loading } = this.state
     const { sidePanelOpen } = this.props
     return (
-      <div className={style.container} {...(sidePanelOpen && { style: { right: 305 } })}>
+      <div className={style.container} {...(sidePanelOpen && { style: { right: 425 } })}>
         <input
           className={style.input}
           onInput={this.handleInput}
