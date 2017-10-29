@@ -5,10 +5,10 @@ const Map = (() => {
 
   const setIcon = (latitude, longitude) => {
     const iconSun = L.icon({
-      iconUrl: './assets/sun.PNG',
-      iconSize: [40, 40]
+      iconUrl: './assets/sunny.png',
+      iconSize: [60, 60]
     })
-    L.marker([latitude, longitude], { icon: iconSun }).addTo(map)
+    L.marker([latitude + 0.08, longitude], { icon: iconSun }).addTo(map)
   }
 
   const setCurrentLocation = () => {
@@ -20,7 +20,7 @@ const Map = (() => {
   }
 
   const initMap = () => {
-    L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
+    L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
       maxZoom: 8,
       minZoom: 3,
       attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
@@ -50,7 +50,8 @@ const Map = (() => {
     },
     setLocation (lat, lon) {
       map.setView([lat, lon], 13)
-    }
+    },
+    setIcon
   }
 })()
 

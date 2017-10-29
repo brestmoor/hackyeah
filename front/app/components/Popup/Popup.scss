@@ -1,0 +1,35 @@
+.popup {
+  position: fixed;
+  left: 50%;
+  bottom: 50%;
+  z-index: 1000;
+  //border: 1px solid black;
+  width: 0px;
+  height: 0px;
+  transform: translate(-50%, -50px);
+  transition: width 0.5s, height 0.5s;
+  padding: 10px;
+  box-sizing: border-box;
+  overflow: hidden;
+
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+
+  border-radius: 10px;
+
+  select {
+    margin-bottom: 10px;
+  }
+
+  textarea {
+    flex: 1;
+    border-radius: 5px;
+    border-color: #cecece;
+  }
+}
+
+.popupOpen {
+  width: 250px;
+  height: 290px;
+}

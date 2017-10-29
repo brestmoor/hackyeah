@@ -17,9 +17,8 @@ class Search extends Component {
     }
 
     this.handleInput = this.handleInput.bind(this)
-    this.searchCities = debounce(this.searchCities.bind(this), 500)
-    this.searchLagLng = debounce(this.searchLagLng.bind(this), 500)
-    this.mapMoveEnd = debounce(this.mapMoveEnd.bind(this), 500)
+    this.searchCities = debounce(this.searchCities.bind(this), 250)
+    this.searchLagLng = debounce(this.searchLagLng.bind(this), 250)
   }
 
   componentDidMount () {
@@ -30,20 +29,6 @@ class Search extends Component {
         loading: false
       })
     })
-
-    this.map.on('moveend', () => {
-      this.mapMoveEnd()
-    })
-  }
-
-  mapMoveEnd () {
-    const { lat: w, lng: s } = this.map.getBounds()._southWest // eslint-disable-line
-    const { lat: e, lng: n } = this.map.getBounds()._northEast // eslint-disable-line
-
-    API.mapBounds(w, s, e, n)
-      .then((data) => {
-        console.log(data)
-      })
   }
 
   searchCities (text, timestamp) {
