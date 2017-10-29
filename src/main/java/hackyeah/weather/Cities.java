@@ -69,13 +69,17 @@ public class Cities {
 
         List<Point> pointsMatrix = Mappers.citiesChecker(CityRepository.getCityList(), new Point(north, west),
                                                          new Point(south, east));
-        pointsMatrix = pointsMatrix.stream().limit(30).collect(Collectors.toList());
+
         AlertManager alertManager = new AlertManager();
+        List<Alert> alertsInRange = Mappers.citiesCheckerForAlerts(alertManager.getAlerts(), new Point(north, west),
+                new Point(south, east));
+
+        pointsMatrix = pointsMatrix.stream().limit(30).collect(Collectors.toList());
 
         try {
             Set<JsonNode> pointFromApi = new WeatherFetcher().fetchFromPoints(pointsMatrix);
             JsonNode node = (JsonNode)pointFromApi.toArray()[0];
-            appendAlerts(alertManager.getAlerts(), (ObjectNode) node);
+            appendAlerts(alertsInRange, (ObjectNode) node);
             return pointFromApi;
         } catch (Exception e) {
             return new TreeSet<JsonNode>();
