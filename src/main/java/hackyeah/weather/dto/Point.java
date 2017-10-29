@@ -20,6 +20,9 @@ public class Point {
         this.lng = Double.parseDouble(lng);
     }
 
+    private Point() {
+    }
+
     public double getLng() {
         return lng;
     }
