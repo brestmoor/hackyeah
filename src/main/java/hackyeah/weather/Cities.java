@@ -6,6 +6,7 @@ import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -61,9 +62,13 @@ public class Cities {
     public Set<JsonNode> getPointsInArea(@QueryParam("s") String south, @QueryParam("w") String west,
                                          @QueryParam("n") String north, @QueryParam("e") String east) {
 
-
-        List<Point> pointsMatrix = Mappers.citiesChecker(CityRepository.getCityList(), new Point(north,west), new Point(south,east));
-        return new WeatherFetcher().fetchFromPoints(pointsMatrix);
+        List<Point> pointsMatrix = Mappers.citiesChecker(CityRepository.getCityList(), new Point(north, west),
+                                                         new Point(south, east));
+        try {
+            return new WeatherFetcher().fetchFromPoints(pointsMatrix);
+        } catch (Exception e) {
+            return new TreeSet<JsonNode>();
+        }
     }
 
     private Point getPointFromUri(URI geometryUri) {
