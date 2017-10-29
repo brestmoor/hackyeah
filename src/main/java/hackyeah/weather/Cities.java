@@ -84,7 +84,7 @@ public class Cities {
         List<Alert> alertsInRange = Mappers.citiesCheckerForAlerts(alertManager.getAlerts(), new Point(north, west),
                                                                    new Point(south, east));
         Collections.shuffle(pointsMatrix);
-        pointsMatrix = pointsMatrix.stream().limit(20).collect(Collectors.toList());
+        pointsMatrix = pointsMatrix.stream().limit(25).collect(Collectors.toList());
 
         try {
             Set<JsonNode> pointFromApi = new WeatherFetcher().fetchFromPoints(pointsMatrix);
