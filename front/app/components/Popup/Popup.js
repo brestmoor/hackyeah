@@ -86,7 +86,7 @@ class Popup extends Component {
               <option value="tsunami">Tsunami</option>
               <option value="flood">Flood</option>
               <option value="earthquake">Earthquake</option>
-              <option value="duststorm">Duststorm</option>
+              <option value="dust_storm">Duststorm</option>
               <option value="heavy_thunderstorm">Heavy Thunderstorm</option>
               <option value="heavy_snow">Heavy Snow</option>
             </select>
