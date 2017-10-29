@@ -33,6 +33,6 @@ public class CityCSVReader {
 
     private City makeCity(String cityText, int i) {
         String[] values = cityText.split(";");
-        return new City(values[0], "PL", String.valueOf(i), values[1], values[2]);
+        return new City(values[0], "PL", String.valueOf(i), values[2], values[1]);
     }
 }

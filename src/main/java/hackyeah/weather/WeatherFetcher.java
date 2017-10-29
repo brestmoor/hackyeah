@@ -28,7 +28,7 @@ public class WeatherFetcher {
     private String getWeatherForPoint(List<Point> point) {
         String coords = prepareCoords(point);
         String query = "select * from weather.forecast where woeid in (SELECT woeid FROM geo.places WHERE " + coords
-                + "\")";
+                + ")";
         System.out.println(query);
         String stringResponse = UrlUtils.getWithQuery("https", "query.yahooapis.com", "v1/public/", query);
         return stringResponse;
@@ -39,6 +39,9 @@ public class WeatherFetcher {
         for (Point p : point) {
             text += "text=\"(" + p.getLat() + "," + p.getLng() + ")\" or ";
         }
-        return text.substring(0, text.length() - 6);
+        if(point.size() == 1) {
+			return text.substring(0, text.length() - 4);
+		}
+		return text.substring(0, text.length() - 4);
     }
 }

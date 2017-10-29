@@ -23,10 +23,9 @@ public class UrlUtils {
             System.out.println(uri);
             get = new HttpGet(uri);
             HttpResponse response = httpClient.execute(get);
-
             return EntityUtils.toString(response.getEntity());
         } catch (IOException e) {
-            throw new RuntimeException();
+            throw new RuntimeException(e);
         }
     }
 

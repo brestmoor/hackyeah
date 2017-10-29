@@ -75,13 +75,11 @@ public class Mappers {
     }
 
     private static boolean checkCity(City city, Point lewyGorny, Point prawyDolny) {
-        if (city.getLat() < lewyGorny.getLat() || city.getLat() > prawyDolny.getLat()) {
-            return false;
+        if (city.getLat() < lewyGorny.getLat() && city.getLat() > prawyDolny.getLat() && city.getLng() > lewyGorny.getLng() && city.getLng() < prawyDolny.getLng()) {
+            System.out.println(city.getName());
+            return true;
         }
-        if (city.getLng() > lewyGorny.getLng() || city.getLat() < prawyDolny.getLng()) {
-            return false;
-        }
-        return true;
+        return false;
     }
 
     public static List<Point> citiesInfoMapper(String stringResponse) {
