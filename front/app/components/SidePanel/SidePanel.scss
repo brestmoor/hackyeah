@@ -1,0 +1,18 @@
+$width: 300px;
+
+.sidePanel {
+  position: fixed;
+  height: 100vh;
+  right: -$width;
+  width: $width;
+  background-color: rgba(255, 255, 255, 0.7);
+  z-index: 1000;
+  top: 0;
+  padding: 20px;
+  box-sizing: border-box;
+  transition: right 0.5s;
+}
+
+.sidePanelOpen {
+  right: 0;
+}

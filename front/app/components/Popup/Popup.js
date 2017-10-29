@@ -40,7 +40,9 @@ class Popup extends Component {
   }
 
   hidePopup () {
-    this.map.removeLayer(this.marker)
+    if (this.map && this.marker) {
+      this.map.removeLayer(this.marker)
+    }
     this.setState({
       popupVisible: false,
       popupOpen: false

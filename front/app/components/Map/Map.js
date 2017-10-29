@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import debounce from 'lodash/debounce'
 
 import Popup from '../Popup/Popup'
@@ -9,7 +10,7 @@ class MapComponent extends Component {
   constructor (props) {
     super(props)
 
-    this.can = false
+    this.can = true
     this.mapMoveEnd = debounce(this.mapMoveEnd.bind(this), 250)
   }
 
@@ -22,19 +23,28 @@ class MapComponent extends Component {
   }
 
   mapMoveEnd () {
-    const { lat: w, lng: s } = this.map.getBounds()._southWest
-    const { lat: e, lng: n } = this.map.getBounds()._northEast
+    const { onWeatherIconOpen } = this.props
+    const { lat: s, lng: w } = this.map.getBounds()._southWest
+    const { lat: n, lng: e } = this.map.getBounds()._northEast
 
-    if (this.can) {
-      this.can = false
-      API.mapBounds(w, s, e, n)
-        .then((data) => {
+    this.can = false
+    API.mapBounds(w, s, e, n)
+      .then((data) => {
+        if (data && data.forEach) {
           data.forEach(({ item }) => {
-            const { lat, long } = item
-            Map.setIcon(lat, long)
+            const { condition, lat, long } = item
+            const key = `${lat}-${long}`
+            if (!Map.has(key)) {
+              Map.set(key, item)
+              const icon = Map.setIcon(lat, long, condition.code, condition.temp)
+              icon.on('click', () => {
+                onWeatherIconOpen()
+              })
+            }
           })
-        })
-    }
+          Map.refreshClusters()
+        }
+      })
   }
 
   render () {
@@ -43,6 +53,14 @@ class MapComponent extends Component {
       <Popup key="popup" />
     ]
   }
+}
+
+MapComponent.propTypes = {
+  onWeatherIconOpen: PropTypes.func
+}
+
+MapComponent.defaultProps = {
+  onWeatherIconOpen: () => {}
 }
 
 export default MapComponent

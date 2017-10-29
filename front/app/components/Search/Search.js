@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import debounce from 'lodash/debounce'
 
 import Map from '../../map'
@@ -75,8 +76,9 @@ class Search extends Component {
 
   render () {
     const { data, loading } = this.state
+    const { sidePanelOpen } = this.props
     return (
-      <div className={style.container}>
+      <div className={style.container} {...(sidePanelOpen && { style: { right: 305 } })}>
         <input
           className={style.input}
           onInput={this.handleInput}
@@ -109,6 +111,10 @@ class Search extends Component {
       </div>
     )
   }
+}
+
+Search.propTypes = {
+  sidePanelOpen: PropTypes.bool.isRequired
 }
 
 export default Search
