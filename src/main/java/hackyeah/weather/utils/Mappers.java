@@ -3,6 +3,7 @@ package hackyeah.weather.utils;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -60,7 +61,53 @@ public class Mappers {
         }
         JsonNode predictions = obj.findValue("location");
 
-        return new Point(Double.parseDouble(predictions.findValue("lat").toString()), Double.parseDouble(predictions.findValue("lng").toString()));
+        return new Point(Double.parseDouble(predictions.findValue("lat").toString()),
+                         Double.parseDouble(predictions.findValue("lng").toString()));
     }
 
+    public static List<Point> citiesChecker(List<City> citiesList, Point lewyGorny, Point prawyDolny) {
+        return citiesList.stream().filter(a -> checkCity(a, lewyGorny, prawyDolny)).collect(Collectors.toList());
+        // List<Point> lp = new ArrayList<>();
+        // for (City city : citiesList) {
+        // if (checkCity(city, lewyGorny, prawyDolny)) {
+        // lp.add(city.getPoint());
+        // }
+        // }
+        // return lp;
+    }
+
+    private static boolean checkCity(City city, Point lewyGorny, Point prawyDolny) {
+        // if (city.getName().contains("Kra")) {
+        // System.out.println(city.getLat() < lewyGorny.getLat());
+        // System.out.println(city.getLat() > prawyDolny.getLat());
+        // System.out.println(city.getLng() > lewyGorny.getLng());
+        // System.out.println(city.getLng() < prawyDolny.getLng());
+        // }
+        if (city.getLat() < lewyGorny.getLat() && city.getLat() > prawyDolny.getLat()
+                && city.getLng() > lewyGorny.getLng() && city.getLng() < prawyDolny.getLng()) {
+            // System.out.println(city.getName());
+            return true;
+        }
+
+        return false;
+    }
+
+    public static List<Point> citiesInfoMapper(String stringResponse) {
+        ObjectMapper mapper = new ObjectMapper();
+        JsonNode obj = null;
+        try {
+            obj = mapper.readTree(stringResponse);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        JsonNode elements = obj.findValue("elements");
+        List<Point> result = new ArrayList<>();
+        for (JsonNode element : elements) {
+            String lat = element.findValue("lat").toString();
+            String lon = element.findValue("lon").toString();
+            result.add(new Point(lat, lon));
+        }
+
+        return result;
+    }
 }
