@@ -3,6 +3,7 @@ package hackyeah.weather;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
@@ -59,6 +60,15 @@ public class Cities {
             return new Point("", "");
         }
         return a;
+    }
+
+    @GET
+    @Path("/advanced")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Set<JsonNode> jeszczeJedenRestDlaMarka(@QueryParam("lat") String lat, @QueryParam("lon") String lon) {
+        List<Point> pointList = new ArrayList<>();
+        pointList.add(new Point(lat, lon));
+        return new WeatherFetcher().fetchFromPoints(pointList);
     }
 
     @GET
