@@ -79,11 +79,9 @@ public class Cities {
 
         List<Point> pointsMatrix = Mappers.citiesChecker(CityRepository.getCityList(), new Point(north, west),
                                                          new Point(south, east));
-
         AlertManager alertManager = new AlertManager();
         List<Alert> alertsInRange = Mappers.citiesCheckerForAlerts(alertManager.getAlerts(), new Point(north, west),
                                                                    new Point(south, east));
-
         pointsMatrix = pointsMatrix.stream().limit(20).collect(Collectors.toList());
 
         try {
